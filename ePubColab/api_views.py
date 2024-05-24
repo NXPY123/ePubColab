@@ -13,8 +13,8 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
-        if self.action == 'create':
-            return CreateUserSerializer
+        if self.action == 'create' or self.action == 'update':
+            return CreateUserSerializer 
         return UserSerializer
 
     def get_permissions(self):
