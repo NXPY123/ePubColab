@@ -4,6 +4,7 @@ from rest_framework import permissions, viewsets
 from rest_framework.generics import CreateAPIView
 from ePubColab.serializers import UserSerializer, UpdateUserSerializer, BookSerializer
 import hashlib
+import os
 from ePubColab.models import Book
 import time
 from rest_framework.response import Response
@@ -45,6 +46,8 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response({"error": "File type is not epub"}, status=400)
 
         token = request.headers['Authorization'].split(' ')[1]
+        # Create directory for the user if it does not exist.
+        os.makedirs(settings.MEDIA_ROOT + '/' + Token.objects.get(key=token).user.username, exist_ok=True)
         user = Token.objects.get(key=token).user
         book = BookSerializer(data={'epub': file, 'user': user.id})
         if book.is_valid():

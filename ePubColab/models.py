@@ -12,3 +12,5 @@ class Book(models.Model):
 
     class Meta:
         unique_together = ('epub', 'user')
+        
+
