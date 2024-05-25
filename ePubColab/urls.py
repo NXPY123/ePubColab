@@ -22,11 +22,12 @@ from ePubColab import api_views
 
 router = routers.DefaultRouter()
 router.register(r'users', api_views.UserViewSet)
+router.register(r'files', api_views.FileViewSet)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-     path('', include(router.urls)),
+    path('', include(router.urls)),
     path('api-token-auth/', views.obtain_auth_token),
     #path("create_user/", api_views.CreateUserView.as_view(), name="create_user"),
 ]
