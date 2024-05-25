@@ -54,4 +54,19 @@ class FileViewSet(viewsets.ModelViewSet):
             book.save()
             return Response({"success": "File uploaded successfully"}, status=200)
         return Response(book.errors, status=400)
+    
+     # Override the destroy method to delete the file from the file system.
+    def delete(self, request):
+        epub = request.data['epub']
+        book = Book.objects.get(epub=epub, user=Token.objects.get(key=request.headers['Authorization'].split(' ')[1]).user.id)
+        os.remove("./"+ book.epub.name)
+        book.delete()
+        return Response({"success": "File deleted successfully"}, status=200)
+    
+    def list(self, request):
+        token = request.headers['Authorization'].split(' ')[1]
+        user = Token.objects.get(key=token).user
+        books = Book.objects.filter(user=user.id)
+        return Response(books.values())
+
 
