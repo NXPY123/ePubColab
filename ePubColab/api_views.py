@@ -58,15 +58,19 @@ class FileViewSet(viewsets.ModelViewSet):
      # Override the destroy method to delete the file from the file system.
     def delete(self, request):
         epub = request.data['epub']
-        book = Book.objects.get(epub=epub, user=Token.objects.get(key=request.headers['Authorization'].split(' ')[1]).user.id)
-        os.remove("./"+ book.epub.name)
-        book.delete()
+        book = Book.objects.get(epub=epub, user=Token.objects.get(key=request.headers['Authorization'].split(' ')[1]).user.id, status="LIVE")
+        try:
+            book.status = "DELETED"
+            book.save()
+        except:
+            return Response({"error": "File does not exist"}, status=400)
+ 
         return Response({"success": "File deleted successfully"}, status=200)
     
     def list(self, request):
         token = request.headers['Authorization'].split(' ')[1]
         user = Token.objects.get(key=token).user
-        books = Book.objects.filter(user=user.id)
+        books = Book.objects.filter(user=user.id, status="LIVE")
         return Response(books.values())
 
 

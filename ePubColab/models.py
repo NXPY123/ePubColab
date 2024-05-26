@@ -9,8 +9,9 @@ def user_directory_path(instance, filename):
 class Book(models.Model):
     epub = models.FileField(upload_to=user_directory_path, storage=ePubStorage)
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE)
+    status = models.CharField(max_length=100, default="LIVE")
 
     class Meta:
         unique_together = ('epub', 'user')
-        
+
 
