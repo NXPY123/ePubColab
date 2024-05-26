@@ -55,7 +55,6 @@ class FileViewSet(viewsets.ModelViewSet):
             return Response({"success": "File uploaded successfully"}, status=200)
         return Response(book.errors, status=400)
     
-     # Override the destroy method to delete the file from the file system.
     def delete(self, request):
         epub = request.data['epub']
         book = Book.objects.get(epub=epub, user=Token.objects.get(key=request.headers['Authorization'].split(' ')[1]).user.id, status="LIVE")
@@ -72,5 +71,22 @@ class FileViewSet(viewsets.ModelViewSet):
         user = Token.objects.get(key=token).user
         books = Book.objects.filter(user=user.id, status="LIVE")
         return Response(books.values())
+    
+    def update(self, request,pk=None):
+        epub = request.data['epub']
+        new_epub = request.data['new_epub']
+        book = Book.objects.get(epub=epub, user=Token.objects.get(key=request.headers['Authorization'].split(' ')[1]).user.id, status="LIVE")
+       # Check that new_epub and epub match till before the last slash.
+        if new_epub.rsplit('/', 1)[0] != epub.rsplit('/', 1)[0]:
+            return Response({"error": "File paths do not match"}, status=400)
+        if not new_epub.endswith('.epub'):
+            return Response({"error": "File type is not epub"}, status=400)
+        book.epub = new_epub
+        book.save()
+        # Update the file in the storage.
+        os.rename(epub, new_epub)
+        return Response({"success": "File updated successfully"}, status=200)
+    
+
 
 

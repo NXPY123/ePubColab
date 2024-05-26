@@ -38,6 +38,8 @@ class BookSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Book.objects.create(epub=validated_data["epub"], user=validated_data["user"])
+    
+    
     class Meta:
         model = Book
         fields = ['epub','user']
