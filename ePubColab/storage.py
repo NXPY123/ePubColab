@@ -1,6 +1,9 @@
 from django.core.files.storage import Storage
 from django.conf import settings
 import os
+from .tasks import upload_file
+from django.apps import apps
+
 
 class ePubStorage(Storage):
     def __init__(self,url=None):
@@ -9,11 +12,11 @@ class ePubStorage(Storage):
             self.url = settings.MEDIA_ROOT
     def _save(self, name, content):
         print(name)
-        with open(name, 'wb+') as destination:
-            for chunk in content.chunks():
-                destination.write(chunk)
+        result = upload_file.delay(name, content)
+        BookUploadTask = apps.get_model('ePubColab', 'BookUploadTask')
+        BookUploadTask.objects.create(book=name, task_id=result.id)
         return name
-    
+
     def _open(self, name, mode='rb'):
         return open(name, mode)
     

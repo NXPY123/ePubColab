@@ -1,6 +1,7 @@
 from django.db import models
 from .storage import ePubStorage
 from django.conf import settings
+
 def user_directory_path(instance, filename):
     return settings.MEDIA_ROOT + '{0}/{1}'.format(instance.user.username, filename)
 
@@ -14,4 +15,9 @@ class Book(models.Model):
     class Meta:
         unique_together = ('epub', 'user')
 
+class BookUploadTask(models.Model):
+    book = models.CharField(max_length=200)
+    task_id = models.CharField(max_length=200)
 
+    class Meta:
+        unique_together = ('book', 'task_id')

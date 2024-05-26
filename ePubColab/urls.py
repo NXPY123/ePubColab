@@ -29,4 +29,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include(router.urls)),
     path('api-token-auth/', views.obtain_auth_token),
+    path("epub-upload-status/<str:task_id>/", api_views.epub_upload_status, name="epub_upload_status")
 ]

@@ -2,14 +2,17 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from rest_framework import permissions, viewsets
 from rest_framework.generics import CreateAPIView
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from ePubColab.serializers import UserSerializer, UpdateUserSerializer, BookSerializer
 import hashlib
 import os
-from ePubColab.models import Book
+from ePubColab.models import Book,BookUploadTask
 import time
 from rest_framework.response import Response
 from django.conf import settings
-
+from django.http import JsonResponse
+import celery
 
 class UserViewSet(viewsets.ModelViewSet):
     """
@@ -51,8 +54,9 @@ class FileViewSet(viewsets.ModelViewSet):
         user = Token.objects.get(key=token).user
         book = BookSerializer(data={'epub': file, 'user': user.id})
         if book.is_valid():
-            book.save()
-            return Response({"success": "File uploaded successfully"}, status=200)
+            book_obj = book.save()
+            task_id = BookUploadTask.objects.get(book=book_obj.epub).task_id
+            return Response({"processing": "File uploading. Check progress using task_id", "task_id":task_id }, status=200)
         return Response(book.errors, status=400)
     
     def delete(self, request):
@@ -87,6 +91,14 @@ class FileViewSet(viewsets.ModelViewSet):
         os.rename(epub, new_epub)
         return Response({"success": "File updated successfully"}, status=200)
     
+@api_view(['GET'])
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+def epub_upload_status(request, task_id):
 
-
-
+    task = celery.result.AsyncResult(task_id)
+    if task.status == 'SUCCESS':
+        return JsonResponse({"status": "SUCCESS"}, status=200)
+    elif task.status == 'FAILURE':
+        return JsonResponse({"status": "FAILURE"}, status=400)
+    else:
+        return JsonResponse({"status": "PENDING"}, status=200)
