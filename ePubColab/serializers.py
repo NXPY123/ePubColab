@@ -1,7 +1,7 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
 
-from ePubColab.models import Book, SharedBook
+from ePubColab.models import Book, Highlights, SharedBook
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -54,3 +54,10 @@ class SharedBookSerializer(serializers.ModelSerializer):
         model = SharedBook
         fields = ["epub", "shared_with", "user"]
         unique_together = ("epub", "shared_with", "user")
+
+
+class HighlightsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Highlights
+        fields = ["book", "user", "highlight", "cfi", "note"]
+        unique_together = ("book", "user", "cfi")

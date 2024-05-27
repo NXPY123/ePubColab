@@ -36,3 +36,14 @@ class SharedBook(models.Model):
 
     class Meta:
         unique_together = ("epub", "shared_with", "user")
+
+
+class Highlights(models.Model):
+    book = models.ForeignKey(Book, on_delete=models.CASCADE)
+    user = models.ForeignKey("auth.User", on_delete=models.CASCADE)
+    highlight = models.TextField()
+    cfi = models.CharField(max_length=200)
+    note = models.TextField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ("book", "user", "cfi")

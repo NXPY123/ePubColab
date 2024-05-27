@@ -11,9 +11,10 @@ from rest_framework import permissions, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from ePubColab.models import Book, BookUploadTask, SharedBook
+from ePubColab.models import Book, BookUploadTask, Highlights, SharedBook
 from ePubColab.serializers import (
     BookSerializer,
+    HighlightsSerializer,
     SharedBookSerializer,
     UpdateUserSerializer,
     UserSerializer,
@@ -215,3 +216,94 @@ class SharedFileViewSet(viewsets.ModelViewSet):
         )
         shared_book.delete()
         return Response({"success": "File unshared successfully"}, status=200)
+
+
+class HighlightsViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows highlights to be viewed, created and deleted.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Highlights.objects.all()
+    serializer_class = HighlightsSerializer
+
+    def access_check(self, epub_id, user):
+        try:
+            book = Book.objects.get(id=epub_id)
+        except Book.DoesNotExist:
+            return False
+        try:
+            if (
+                book.user.id != user.id
+                and not SharedBook.objects.filter(
+                    epub=epub_id, shared_with=user.id
+                ).exists()
+            ):
+                return False
+        except SharedBook.DoesNotExist:
+            return False
+        return True
+
+    def list(self, request):
+        token = request.headers["Authorization"].split(" ")[1]
+        user = Token.objects.get(key=token).user
+        epub_id = request.GET.get("epub_id")
+        # Check if the user has access to the file.
+        if not self.access_check(epub_id, user):
+            return Response(
+                {"error": "User does not have access to the file"}, status=400
+            )
+        highlights = Highlights.objects.filter(book=epub_id)
+        return Response(highlights.values())
+
+    def create(self, request):
+        token = request.headers["Authorization"].split(" ")[1]
+        user = Token.objects.get(key=token).user
+        epub_id = request.data["epub_id"]
+        # Check if the user has access to the file.
+        if not self.access_check(epub_id, user):
+            return Response(
+                {"error": "User does not have access to the file"}, status=400
+            )
+        data = {
+            "book": epub_id,
+            "user": user.id,
+            "highlight": request.data["highlight"],
+            "cfi": request.data["cfi"],
+            "note": request.data.get("note", ""),
+        }
+        highlight = HighlightsSerializer(data=data)
+        if highlight.is_valid():
+            highlight.save()
+            return Response({"success": "Highlight created successfully"}, status=200)
+        return Response(highlight.errors, status=400)
+
+    def delete(self, request):
+        token = request.headers["Authorization"].split(" ")[1]
+        user = Token.objects.get(key=token).user
+        epub_id = request.data["epub_id"]
+        # Check if the user has access to the file.
+        if not self.access_check(epub_id, user):
+            return Response(
+                {"error": "User does not have access to the file"}, status=400
+            )
+        cfi = request.data["cfi"]
+        highlight = Highlights.objects.get(book=epub_id, user=user.id, cfi=cfi)
+        highlight.delete()
+        return Response({"success": "Highlight deleted successfully"}, status=200)
+
+    def update(self, request, pk=None):
+        token = request.headers["Authorization"].split(" ")[1]
+        user = Token.objects.get(key=token).user
+        epub_id = request.data["epub_id"]
+        # Check if the user has access to the file.
+        if not self.access_check(epub_id, user):
+            return Response(
+                {"error": "User does not have access to the file"}, status=400
+            )
+        cfi = request.data["cfi"]
+        highlight = Highlights.objects.get(book=epub_id, user=user.id, cfi=cfi)
+        highlight.highlight = request.data["highlight"]
+        highlight.note = request.data.get("note", "")
+        highlight.save()
+        return Response({"success": "Highlight updated successfully"}, status=200)
