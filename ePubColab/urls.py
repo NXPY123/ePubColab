@@ -18,16 +18,21 @@ from django.contrib import admin
 from django.urls import include, path
 from rest_framework import routers
 from rest_framework.authtoken import views
+
 from ePubColab import api_views
 
 router = routers.DefaultRouter()
-router.register(r'users', api_views.UserViewSet)
-router.register(r'files', api_views.FileViewSet)
+router.register(r"users", api_views.UserViewSet)
+router.register(r"files", api_views.FileViewSet)
 
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include(router.urls)),
-    path('api-token-auth/', views.obtain_auth_token),
-    path("epub-upload-status/<str:task_id>/", api_views.epub_upload_status, name="epub_upload_status")
+    path("", include(router.urls)),
+    path("api-token-auth/", views.obtain_auth_token),
+    path(
+        "epub-upload-status/<str:task_id>/",
+        api_views.epub_upload_status,
+        name="epub_upload_status",
+    ),
 ]

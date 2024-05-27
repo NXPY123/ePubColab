@@ -19,8 +19,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 # 6. rabbitmq server configuration
 
 
-from pathlib import Path
 import os
+from pathlib import Path
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -48,7 +49,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework.authtoken",
     "ePubColab",
-    'django_celery_results',
+    "django_celery_results",
 ]
 
 MIDDLEWARE = [
@@ -98,7 +99,10 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        "NAME": (
+            "django.contrib.auth.password_validation."
+            "UserAttributeSimilarityValidator"
+        )
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
@@ -113,8 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'rest_framework.authentication.TokenAuthentication',
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.TokenAuthentication",
     ],
 }
 
@@ -139,15 +143,15 @@ STATIC_URL = "static/"
 # Media files
 MEDIA_URL = "/media/"
 BASE_DIR = "./ePubColab/"
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CELERY_BROKER_URL = 'amqp://admin:admin@localhost:5672/rabbitmqepub'
-CELERY_RESULT_BACKEND = 'django-db'
-CELERY_CACHE_BACKEND = 'django-cache'
-CELERY_TASK_SERIALIZER = 'pickle'
-CELERY_RESULT_SERIALIZE = 'pickle'
-CELERY_ACCEPT_CONTENT = ['pickle', 'json']
+CELERY_BROKER_URL = "amqp://admin:admin@localhost:5672/rabbitmqepub"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_CACHE_BACKEND = "django-cache"
+CELERY_TASK_SERIALIZER = "pickle"
+CELERY_RESULT_SERIALIZE = "pickle"
+CELERY_ACCEPT_CONTENT = ["pickle", "json"]
