@@ -37,11 +37,14 @@ class ePubTestCase(TestCase):
 
         # Upload the file
         with open("./ePubColab/tests/media/test.epub", "rb") as f:
-            cls.client.post("/files/", data={"file": f}, headers=cls.headers)
+            response = cls.client.post("/files/", data={"file": f}, headers=cls.headers)
+            cls.task_id = response.json()["task_id"]
 
         response = cls.client.get("/files/", headers=cls.headers)
         cls.filepath = response.json()[0]["epub"]
-        print(cls.filepath)
+
+        response = cls.client.get(f"/files/status/{cls.task_id}/", headers=cls.headers)
+        TestCase().assertIn(response.json()["status"], ["SUCCESS", "PENDING"])
 
     def test_upload_file(self):
         response = self.client.get("/files/", headers=self.headers)
@@ -65,5 +68,7 @@ class ePubTestCase(TestCase):
     # Delete the media directory with the files after the tests are done.
     @classmethod
     def tearDownClass(cls):
-        os.remove(settings.MEDIA_ROOT + "testuser/test.epub")
+        # Find and remove all files in the media/testuser directory
+        for file in os.listdir(settings.MEDIA_ROOT + "testuser"):
+            os.remove(settings.MEDIA_ROOT + "testuser/" + file)
         os.rmdir(settings.MEDIA_ROOT + "testuser")
