@@ -6,8 +6,6 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from rest_framework import permissions, viewsets
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, renderer_classes
-from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer
 from rest_framework.response import Response
 
 from ePubColab.models import Book, BookUploadTask
@@ -118,14 +116,14 @@ class FileViewSet(viewsets.ModelViewSet):
         os.rename(epub, new_epub)
         return Response({"success": "File updated successfully"}, status=200)
 
+    # Create a custom endpoint to check the status of the file upload task.
 
-@api_view(["GET"])
-@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
-def epub_upload_status(request, task_id):
-    task = celery.result.AsyncResult(task_id)
-    if task.status == "SUCCESS":
-        return JsonResponse({"status": "SUCCESS"}, status=200)
-    elif task.status == "FAILURE":
-        return JsonResponse({"status": "FAILURE"}, status=400)
-    else:
-        return JsonResponse({"status": "PENDING"}, status=200)
+    def upload_status(self, request, task_id):
+        task = celery.result.AsyncResult(task_id)
+
+        if task.status == "SUCCESS":
+            return JsonResponse({"status": "SUCCESS"}, status=200)
+        elif task.status == "FAILURE":
+            return JsonResponse({"status": "FAILURE"}, status=400)
+        else:
+            return JsonResponse({"status": "PENDING"}, status=200)

@@ -20,6 +20,7 @@ from rest_framework import routers
 from rest_framework.authtoken import views
 
 from ePubColab import api_views
+from ePubColab.api_views import FileViewSet
 
 router = routers.DefaultRouter()
 router.register(r"users", api_views.UserViewSet)
@@ -30,9 +31,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
     path("api-token-auth/", views.obtain_auth_token),
-    path(
-        "epub-upload-status/<str:task_id>/",
-        api_views.epub_upload_status,
-        name="epub_upload_status",
-    ),
+    path("files/status/<str:task_id>/", FileViewSet.as_view({"get": "upload_status"})),
 ]
