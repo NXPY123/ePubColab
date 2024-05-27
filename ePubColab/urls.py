@@ -25,6 +25,7 @@ router = routers.DefaultRouter()
 router.register(r"users", api_views.UserViewSet)
 router.register(r"files", api_views.FileViewSet)
 router.register(r"shared", api_views.SharedFileViewSet)
+router.register(r"highlights", api_views.HighlightsViewSet)
 
 
 urlpatterns = [
