@@ -23,3 +23,16 @@ class BookUploadTask(models.Model):
 
     class Meta:
         unique_together = ("book", "task_id")
+
+
+class SharedBook(models.Model):
+    user = models.ForeignKey(
+        "auth.User", on_delete=models.CASCADE, related_name="shared_books"
+    )
+    epub = models.ForeignKey(Book, on_delete=models.CASCADE)
+    shared_with = models.ForeignKey(
+        "auth.User", on_delete=models.CASCADE, related_name="received_books"
+    )
+
+    class Meta:
+        unique_together = ("epub", "shared_with", "user")

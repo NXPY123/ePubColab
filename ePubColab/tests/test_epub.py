@@ -51,6 +51,12 @@ class ePubTestCase(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertIn(self.filepath, response.json()[0]["epub"])
 
+    def test_download_link(self):
+        params = {"epub": self.filepath}
+        response = self.client.get("/files/link/", params, headers=self.headers)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn(self.filepath.split("/", 1)[1], response.json()["secure_link"])
+
     def test_delete_file(self):
         # Send delete request to the API.
         response = self.client.delete(

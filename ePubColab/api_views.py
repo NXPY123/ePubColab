@@ -11,8 +11,13 @@ from rest_framework import permissions, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 
-from ePubColab.models import Book, BookUploadTask
-from ePubColab.serializers import BookSerializer, UpdateUserSerializer, UserSerializer
+from ePubColab.models import Book, BookUploadTask, SharedBook
+from ePubColab.serializers import (
+    BookSerializer,
+    SharedBookSerializer,
+    UpdateUserSerializer,
+    UserSerializer,
+)
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -120,7 +125,7 @@ class FileViewSet(viewsets.ModelViewSet):
         return Response({"success": "File updated successfully"}, status=200)
 
     def download_link(self, request):
-        file_path = request.GET.get("file_path")
+        file_path = request.GET.get("epub")
 
         # Check if the file exists and file belongs to the user
         def generate_secure_link(file_path):
@@ -158,3 +163,55 @@ class FileViewSet(viewsets.ModelViewSet):
             return JsonResponse({"status": "FAILURE"}, status=400)
         else:
             return JsonResponse({"status": "PENDING"}, status=200)
+
+
+class SharedFileViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows shared files to be viewed.
+    """
+
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = SharedBook.objects.all()
+    serializer_class = SharedBookSerializer
+
+    def list(self, request):
+        token = request.headers["Authorization"].split(" ")[1]
+        user = Token.objects.get(key=token).user
+        return Response(
+            {
+                "books_recieved": user.received_books.values(),
+                "books_shared": user.shared_books.values(),
+            }
+        )
+
+    def create(self, request):
+        epub = request.data["epub"]
+        shared_with = request.data["shared_with"]
+        user = Token.objects.get(
+            key=request.headers["Authorization"].split(" ")[1]
+        ).user
+        if user.username == request.data["shared_with"]:
+            return Response({"error": "Cannot share file with yourself"}, status=400)
+        shared_with_user = User.objects.get(username=shared_with)
+        book = Book.objects.get(epub=epub, user=user.id, status="LIVE")
+        shared_book = SharedBookSerializer(
+            data={"epub": book.id, "user": user.id, "shared_with": shared_with_user.id}
+        )
+        if shared_book.is_valid():
+            shared_book.save()
+            return Response({"success": "File shared successfully"}, status=200)
+        return Response(shared_book.errors, status=400)
+
+    def delete(self, request):
+        epub = request.data["epub"]
+        shared_with = request.data["shared_with"]
+        user = Token.objects.get(
+            key=request.headers["Authorization"].split(" ")[1]
+        ).user
+        shared_with_user = User.objects.get(username=shared_with)
+        book = Book.objects.get(epub=epub, user=user.id)
+        shared_book = SharedBook.objects.get(
+            epub=book.id, shared_with=shared_with_user.id, user=user.id
+        )
+        shared_book.delete()
+        return Response({"success": "File unshared successfully"}, status=200)

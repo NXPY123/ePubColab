@@ -20,17 +20,20 @@ from rest_framework import routers
 from rest_framework.authtoken import views
 
 from ePubColab import api_views
-from ePubColab.api_views import FileViewSet
 
 router = routers.DefaultRouter()
 router.register(r"users", api_views.UserViewSet)
 router.register(r"files", api_views.FileViewSet)
+router.register(r"shared", api_views.SharedFileViewSet)
 
 
 urlpatterns = [
-    path("files/link/", FileViewSet.as_view({"get": "download_link"})),
+    path("files/link/", api_views.FileViewSet.as_view({"get": "download_link"})),
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
     path("api-token-auth/", views.obtain_auth_token),
-    path("files/status/<str:task_id>/", FileViewSet.as_view({"get": "upload_status"})),
+    path(
+        "files/status/<str:task_id>/",
+        api_views.FileViewSet.as_view({"get": "upload_status"}),
+    ),
 ]
