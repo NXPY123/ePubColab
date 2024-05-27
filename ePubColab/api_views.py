@@ -1,4 +1,7 @@
+import base64
+import hashlib
 import os
+import time
 
 import celery
 from django.conf import settings
@@ -116,7 +119,35 @@ class FileViewSet(viewsets.ModelViewSet):
         os.rename(epub, new_epub)
         return Response({"success": "File updated successfully"}, status=200)
 
-    # Create a custom endpoint to check the status of the file upload task.
+    def download_link(self, request):
+        file_path = request.GET.get("file_path")
+
+        # Check if the file exists and file belongs to the user
+        def generate_secure_link(file_path):
+            expires = int(time.time()) + 3600  # Link valid for 1 hour
+            secret_key = settings.NGINX_SECURE_LINK_SECRET_KEY
+            print(secret_key)
+            secure_string = f"{expires}{file_path} {secret_key}"
+            md5_hash = hashlib.md5(str(secure_string).encode("utf-8")).digest()
+            base64_hash = base64.urlsafe_b64encode(md5_hash)
+            str_hash = base64_hash.decode("utf-8").rstrip("=")
+            secure_link = f"{file_path}?md5={str_hash}&expires={expires}"
+            return Response({"secure_link": secure_link}, status=200)
+
+        try:
+            file = Book.objects.get(epub=file_path)
+            user = Token.objects.get(
+                key=request.headers["Authorization"].split(" ")[1]
+            ).user
+            if file.user != user:
+                return Response(
+                    {"error": "File does not belong to the user"}, status=400
+                )
+        except Book.DoesNotExist:
+            return Response({"error": "File does not exist"}, status=400)
+        file_path = file_path.split("ePubColab")[1]
+        print(file_path)
+        return generate_secure_link(file_path)
 
     def upload_status(self, request, task_id):
         task = celery.result.AsyncResult(task_id)

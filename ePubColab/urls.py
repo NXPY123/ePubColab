@@ -28,6 +28,7 @@ router.register(r"files", api_views.FileViewSet)
 
 
 urlpatterns = [
+    path("files/link/", FileViewSet.as_view({"get": "download_link"})),
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
     path("api-token-auth/", views.obtain_auth_token),
