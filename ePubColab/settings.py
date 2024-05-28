@@ -26,6 +26,7 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+TEST_BASE_DIR = Path(__file__).resolve().parent / "tests"
 
 load_dotenv()
 NGINX_SECURE_LINK_SECRET_KEY = os.getenv("NGINX_SECURE_LINK_SECRET_KEY")
@@ -44,6 +45,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -84,7 +86,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "ePubColab.wsgi.application"
-
+ASGI_APPLICATION = "ePubColab.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
@@ -93,6 +103,9 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3",
+        "TEST": {
+            "NAME": TEST_BASE_DIR / "db.sqlite3",
+        },
     }
 }
 
@@ -146,6 +159,7 @@ STATIC_URL = "static/"
 # Media files
 MEDIA_URL = "/media/"
 BASE_DIR = "./ePubColab/"
+TEST_BASE_DIR = "./ePubColab/tests/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
