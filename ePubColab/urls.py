@@ -31,6 +31,8 @@ router.register(r"highlights", api_views.HighlightsViewSet)
 urlpatterns = [
     path("files/link/", api_views.FileViewSet.as_view({"get": "download_link"})),
     path("admin/", admin.site.urls),
+    path("chat/", api_views.index, name="index"),
+    path("chat/<str:room_name>/", api_views.room, name="room"),
     path("", include(router.urls)),
     path("api-token-auth/", views.obtain_auth_token),
     path(

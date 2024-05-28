@@ -7,6 +7,7 @@ import celery
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework import permissions, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
@@ -311,3 +312,11 @@ class HighlightsViewSet(viewsets.ModelViewSet):
         highlight.note = request.data.get("note", "")
         highlight.save()
         return Response({"success": "Highlight updated successfully"}, status=200)
+
+
+def index(request):
+    return render(request, "chat/index.html")
+
+
+def room(request, room_name):
+    return render(request, "chat/room.html", {"room_name": room_name})
