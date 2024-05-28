@@ -145,14 +145,18 @@ class FileViewSet(viewsets.ModelViewSet):
             user = Token.objects.get(
                 key=request.headers["Authorization"].split(" ")[1]
             ).user
-            if file.user != user:
+            if (
+                file.user != user
+                and not SharedBook.objects.filter(
+                    epub=file.id, shared_with=user.id
+                ).exists()
+            ):
                 return Response(
                     {"error": "File does not belong to the user"}, status=400
                 )
         except Book.DoesNotExist:
             return Response({"error": "File does not exist"}, status=400)
         file_path = file_path.split("ePubColab")[1]
-        print(file_path)
         return generate_secure_link(file_path)
 
     def upload_status(self, request, task_id):
