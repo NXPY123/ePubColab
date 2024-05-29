@@ -43,7 +43,8 @@
             const messageInputDom = document.querySelector('#chat-message-input');
             const message = messageInputDom.value;
             chatSocket.send(JSON.stringify({
-                'message': message
+                'message': message,
+                "Authorization": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
             }));
             messageInputDom.value = '';
         };
