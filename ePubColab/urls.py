@@ -19,7 +19,7 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework.authtoken import views
 
-from ePubColab import api_views
+from ePubColab import api_views, chat_views
 
 router = routers.DefaultRouter()
 router.register(r"users", api_views.UserViewSet)
@@ -31,8 +31,8 @@ router.register(r"highlights", api_views.HighlightsViewSet)
 urlpatterns = [
     path("files/link/", api_views.FileViewSet.as_view({"get": "download_link"})),
     path("admin/", admin.site.urls),
-    path("chat/", api_views.index, name="index"),
-    path("chat/<str:room_name>/", api_views.room, name="room"),
+    path("chat/", chat_views.index, name="index"),
+    path("chat/<str:room_name>/", chat_views.room, name="room"),
     path("", include(router.urls)),
     path("api-token-auth/", views.obtain_auth_token),
     path(
