@@ -1,0 +1,887 @@
+{
+	"info": {
+		"_postman_id": "f49d3b21-9d07-4702-ae4b-e0ca4c6bfb72",
+		"name": "ePubColabCollection",
+		"description": "A collection of API Endpoints of the ePubColab eBook Reader",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27754545"
+	},
+	"item": [
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "RegisterUser",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "neerajpy",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "neerajpy",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "neeraj.yathy@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								""
+							],
+							"query": [
+								{
+									"key": "username",
+									"value": "neerajpy",
+									"disabled": true
+								},
+								{
+									"key": "password",
+									"value": "neerajpy",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateToken",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "admin",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/api-token-auth/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"api-token-auth",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EditUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token 074b3a1d68f0075f510bfdc79a367a468a6a3e7f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "neerajpy",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "neerajpy",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "neeraj.yathy@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/2/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"2",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetUsers",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
+							}
+						],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "Authentication endpoints"
+		},
+		{
+			"name": "Books",
+			"item": [
+				{
+					"name": "Add Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
+							},
+							{
+								"key": "",
+								"value": "",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/files/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								""
+							]
+						},
+						"description": "Add epub file in the body"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteBook",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/neerajpy/BrothersKaramazov1.epub",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/files/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ListBooks",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/files/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateBook",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov_usLMD9V.epub",
+									"type": "text"
+								},
+								{
+									"key": "new_epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/files/20/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"files",
+								"20",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BookUploadStatus",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
+							}
+						],
+						"url": {
+							"raw": "http://localhost/files/status/fe091a5e-4e10-4c16-aac5-5b705cc67727",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								"status",
+								"fe091a5e-4e10-4c16-aac5-5b705cc67727"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetBookDownnloadLink",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token c7ea673aa7d1c0674b1b5a11098ed549b05e539f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/files/link/?epub=ePubColab/media/neerajpy/BrothersKaramazovp6.epub",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								"link",
+								""
+							],
+							"query": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/neerajpy/BrothersKaramazovp6.epub"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Download book with secure link",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost/media/admin/BrothersKaramazov1.epub?md5=cEN2IXraVW6DjUYa6MNOoA&expires=1716807611",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"media",
+								"admin",
+								"BrothersKaramazov1.epub"
+							],
+							"query": [
+								{
+									"key": "md5",
+									"value": "cEN2IXraVW6DjUYa6MNOoA"
+								},
+								{
+									"key": "expires",
+									"value": "1716807611"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SharedBooks",
+			"item": [
+				{
+					"name": "ShareBook",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							},
+							{
+								"key": "epub",
+								"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+								"disabled": true
+							},
+							{
+								"key": "shared_with",
+								"value": "neerajpy",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+									"type": "text"
+								},
+								{
+									"key": "shared_with",
+									"value": "neerajpy",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/shared/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"shared",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SharedBooksList",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost/shared/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"shared",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteSharedbook",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+									"type": "text"
+								},
+								{
+									"key": "shared_with",
+									"value": "neerajpy",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/shared/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"shared",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetSharedBookDownloadLink",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token 074b3a1d68f0075f510bfdc79a367a468a6a3e7f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/files/link/?epub=ePubColab/media/admin/BrothersKaramazov1.epub",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"files",
+								"link",
+								""
+							],
+							"query": [
+								{
+									"key": "epub",
+									"value": "ePubColab/media/admin/BrothersKaramazov1.epub"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Highlights",
+			"item": [
+				{
+					"name": "ListHighlight",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost/highlights/?epub_id=21",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							],
+							"query": [
+								{
+									"key": "epub_id",
+									"value": "21"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CreateHighlight",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub_id",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "highlight",
+									"value": "Lorem ipsum dolores blah",
+									"type": "text"
+								},
+								{
+									"key": "cfi",
+									"value": "#fesf32r242qerr$@^gdg$%#%$#^&GDFGD@R@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/highlights/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Highlight Shared Book",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token 074b3a1d68f0075f510bfdc79a367a468a6a3e7f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "http://localhost/highlights/?epub_id=21",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							],
+							"query": [
+								{
+									"key": "epub_id",
+									"value": "21"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Highlight Shared Book",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token 074b3a1d68f0075f510bfdc79a367a468a6a3e7f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub_id",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "highlight",
+									"value": "Lorem ipsum dolores blah by neeraj",
+									"type": "text"
+								},
+								{
+									"key": "cfi",
+									"value": "NotHereSomethingElse",
+									"type": "text"
+								},
+								{
+									"key": "note",
+									"value": "Loved this",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/highlights/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Highlight Shared Book",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token 074b3a1d68f0075f510bfdc79a367a468a6a3e7f"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub_id",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "cfi",
+									"value": "NotHereSomethingElse",
+									"type": "text"
+								},
+								{
+									"key": "",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/highlights/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Highlight",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Token fc8ff0768ba53e44850c54766e6c0039d3888caf"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "epub_id",
+									"value": "21",
+									"type": "text"
+								},
+								{
+									"key": "cfi",
+									"value": "#fesf32r242qerr$@^gdg$%#%$#^&GDFGD@R@",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost/highlights/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"path": [
+								"highlights",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
