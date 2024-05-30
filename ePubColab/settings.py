@@ -87,15 +87,24 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "ePubColab.wsgi.application"
 ASGI_APPLICATION = "ePubColab.asgi.application"
+# if os.getenv("APP_ENV") == "LOCAL":
+#     CHANNEL_LAYERS = {
+#         "default": {
+#             "BACKEND": "channels_redis.core.RedisChannelLayer",
+#             "CONFIG": {
+#                 "hosts": [("127.0.0.1", 6379)],
+#             },
+#         },
+#     }
+
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("127.0.0.1", 6379)],
+            "hosts": [("redis", 6379)],
         },
     },
 }
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
@@ -166,7 +175,11 @@ MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-CELERY_BROKER_URL = "amqp://admin:admin@localhost:5672/rabbitmqepub"
+
+# if os.getenv("APP_ENV") == "LOCAL":
+#   CELERY_BROKER_URL = "amqp://admin:admin@localhost:5672/rabbitmqepub"
+# elif os.getenv("APP_ENV") == "CONTAINER":
+CELERY_BROKER_URL = "amqp://admin:admin@rabbitmq:5672/"
 CELERY_RESULT_BACKEND = "django-db"
 CELERY_CACHE_BACKEND = "django-cache"
 CELERY_TASK_SERIALIZER = "pickle"

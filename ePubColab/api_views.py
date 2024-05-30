@@ -161,7 +161,6 @@ class FileViewSet(viewsets.ModelViewSet):
 
     def upload_status(self, request, task_id):
         task = celery.result.AsyncResult(task_id)
-
         if task.status == "SUCCESS":
             return JsonResponse({"status": "SUCCESS"}, status=200)
         elif task.status == "FAILURE":
