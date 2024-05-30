@@ -6,8 +6,6 @@ This repository provides the backend functionality for a Collaborative epubReade
 - Prerequisites
 - Setup
 - Usage
-- Contributing
-- License
 
 # Features
 - ePub Upload: Users can upload their epub files for reading and annotation.
