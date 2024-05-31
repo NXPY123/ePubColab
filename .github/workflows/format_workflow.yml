@@ -1,0 +1,47 @@
+name: Lint and Format Check
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  commit:
+    branches:
+      - main
+
+jobs:
+  lint-and-format:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x' # specify your Python version
+
+    - name: Install dependencies
+      run: |
+        python -m venv venv
+        source venv/bin/activate
+        pip install flake8 black
+
+    - name: Lint with flake8
+      run: |
+        source venv/bin/activate
+        flake8 .
+
+    - name: Check formatting with black
+      run: |
+        source venv/bin/activate
+        black --check .
+
+    - name: Show black formatting suggestions
+      if: failure() # this step runs only if the previous step fails
+      run: |
+        source venv/bin/activate
+        black --diff .
