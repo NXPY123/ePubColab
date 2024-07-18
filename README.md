@@ -15,8 +15,8 @@ This repository provides the backend functionality for a Collaborative epubReade
 
 # Setup
 1. Clone the repository
-```bash 
-git clone https://github.com/NXPY123/ePubColab 
+```bash
+git clone https://github.com/NXPY123/ePubColab
 ```
 2. Move into the directory
 ```bash
@@ -28,6 +28,13 @@ cd ePubColab
 docker-compose build
 docker-compose up
 ```
+
+To setup locust for load testing, run the following command instead:
+```bash
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+```
+
+
 5. Create an `ePubColab.conf` file inside `/opt/homebrew/etc/nginx/servers/`
 6. Paste the following inside the `ePubColab.conf` file:
 ```conf
@@ -51,7 +58,7 @@ server {
             return 410;
         }
 
-        
+
     }
 
 
@@ -68,6 +75,9 @@ server {
 ```bash
 sudo nginx
 ```
+-- --
+
+Locust can be accessed at: `http://localhost:8089/`
 
 # Usage
 This backend provides RESTful API endpoints for user management, epub upload/download, sharing, and annotation functionalities.
