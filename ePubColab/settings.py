@@ -39,6 +39,8 @@ SECRET_KEY = "django-insecure-lm#dpftdetll4beg!5k#d201fqb&bbcc=#k=s7scsm^qco(#ud
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+PYINSTRUMENT_PROFILE_DIR = "profiles"
+
 ALLOWED_HOSTS = ["django"]
 
 
@@ -65,6 +67,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "pyinstrument.middleware.ProfilerMiddleware",
 ]
 
 ROOT_URLCONF = "ePubColab.urls"
